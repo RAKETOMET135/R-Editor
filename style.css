@@ -1,0 +1,281 @@
+:root {
+    --main-background-color: rgb(47, 47, 47);
+    --sec-background-color: rgb(100, 100, 100);
+    --main-text-color: white;
+}
+
+* {
+    margin: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+body {
+    background-color: black;
+}
+
+/* Project loader */
+#project-loader {
+    visibility: hidden;
+}
+#loader {
+    width: 40em;
+    height: 20em;
+    background-color: var(--main-background-color);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+#loader button {
+    width: 40%;
+    height: 80%;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 3rem;
+    background-color: var(--sec-background-color);
+    color: var(--main-text-color);
+}
+
+/* R-Editor */
+/* Explorer */
+#element-list {
+    position: absolute;
+    left: 0;
+    top: 10%;
+    width: 20em;
+    height: 80%;
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+}
+#element-list h1 {
+    color: var(--main-text-color);
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    border: 2px solid var(--sec-background-color);
+    width: 100%;
+    font-size: 2rem;
+    height: 2.5rem;
+    text-align: center;
+}
+#explorer {
+    position: absolute;
+    top: 2.5rem;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 2.5rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+#explorer div {
+    width: 100%;
+    height: 2rem;
+    position: relative;
+    margin-left: 1.25rem;
+    margin-top: 0.75rem;
+}
+#explorer img {
+    height: 2rem;
+    aspect-ratio: 1/1;
+    position: absolute;
+    left: 0;
+}
+#explorer p {
+    position: absolute;
+    left: 2.5rem;
+    height: 2rem;
+    color: var(--main-text-color);
+    font-size: 1.75rem;
+}
+#explorer input {
+    position: absolute;
+    left: 2.5rem;
+    height: 2rem;
+    color: var(--main-text-color);
+    font-size: 1.75rem;
+    border: none;
+    background-color: transparent;
+    box-sizing: border-box;
+    padding: 0;
+    outline: none;
+}
+#explorer input:focus {
+    outline: none;
+}
+#explorer h3 {
+    position: absolute;
+    left: -1.5rem;
+    height: 2rem;
+    color: var(--main-text-color);
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+#explorer-contextmenu {
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+    width: 10em;
+    height: 5em;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+}
+#explorer-contextmenu button {
+    height: 2em;
+    color: var(--main-text-color);
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#explorer-contextmenu button:hover {
+    background-color: var(--sec-background-color);
+}
+
+/* Object data */
+#property-list {
+    position: absolute;
+    right: 0;
+    top: 10%;
+    width: 20em;
+    height: 80%;
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+}
+#property-list h1 {
+    color: var(--main-text-color);
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    border: 2px solid var(--sec-background-color);
+    width: 100%;
+    font-size: 2rem;
+    height: 2.5rem;
+    text-align: center;
+}
+#object-data {
+    position: absolute;
+    top: 2.5rem;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 2.5rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+#object-data div {
+    background-color: var(--sec-background-color);
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 0.9rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+#object-data h2 {
+    color: var(--main-text-color);
+    position: absolute;
+    width: 100%;
+    border-bottom: 2px solid var(--main-background-color);
+    text-align: center;
+}
+#object-data p {
+    color: var(--main-text-color);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+#object-data input {
+    text-align: center;
+    background-color: rgb(75, 75, 75);
+    color: var(--main-text-color);
+    border: none;
+    outline: none;
+}
+#object-data button {
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+#object-data button:hover {
+    background-color: var(--sec-background-color);
+}
+#object-data-new-data {
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 0;
+    flex-direction: column;
+}
+#object-data-new-data input {
+    width: calc(100% - 4px);
+    height: 2em;
+    border: none;
+    outline: none;
+    text-align: center;
+    background-color: rgb(75, 75, 75);
+    color: var(--main-text-color);
+}
+#object-data-new-data div {
+    width: calc(100%);
+    height: calc(100% - 1em);
+    margin-top: 1em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+#all-object-data button {
+    border: 2px solid var(--sec-background-color);
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#all-object-data button:hover {
+    background-color: var(--sec-background-color);
+}
+
+/* Main controls */
+#main-controls {
+    background-color: var(--main-background-color);
+    width: calc(100% - 4px);
+    height: 10%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 2px solid var(--sec-background-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+#main-controls button {
+    width: 6em;
+    height: 6em;
+    cursor: pointer;
+    background-color: var(--main-background-color);
+    border: 2px solid var(--sec-background-color);
+    color: var(--main-text-color);
+    font-size: 0.75rem;
+    padding: 0;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+#main-controls button:hover {
+    background-color: var(--sec-background-color);
+}
