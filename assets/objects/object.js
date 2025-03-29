@@ -6,7 +6,25 @@ export class Object{
         this.data = []
     }
 
-    cloneObject() {
+    addData(data){
+        let dataExists = false
+
+        for (let i = 0; i < this.data.length; i++){
+            const curData = this.data[i]
+
+            if (curData[0] !== data[0]) continue
+
+            dataExists = true
+
+            break
+        }
+
+        if (dataExists) return
+
+        this.data.push(data)
+    }
+
+    cloneObject(){
         const clone = new Object(this.name, this.id)
 
         clone.tag = this.tag

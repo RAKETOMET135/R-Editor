@@ -7,6 +7,11 @@ export class ObjectData{
         this.explorer = explorer
         this.objectDataRenderDiv = objectDataRenderDiv
         this.project = project
+
+        const objectDataSearch = document.querySelector("#object-data-search")
+        objectDataSearch.addEventListener("input", () => {
+            this.appendNewDataMenu(objectDataSearch.value)
+        })
     }
 
     clearObjectData(){
@@ -100,12 +105,28 @@ export class ObjectData{
 
         const allData = getAllData()
 
+        search = search.toLowerCase()
+
         for (let i = 0; i < allData.length; i++){
             const data = allData[i]
+            
+            if (!data.toLowerCase().includes(search)) continue
 
             const dataButton = document.createElement("button")
             dataButton.innerText = data
             holder.append(dataButton)
+
+            dataButton.addEventListener("click", () => {
+                let selectedObject = this.explorer.selectedElement
+                
+                if (!selectedObject) return
+
+                let dataConstruct = [data, []]
+
+                selectedObject.object.addData(dataConstruct)
+
+                this.renderSelectedObjectData(selectedObject)
+            })
         }
     }
 
@@ -137,6 +158,113 @@ export class ObjectData{
         return newDataButton
     }
 
+    createSpecData(object, selectedObject, data){
+        const holder = document.createElement("div")
+        const header = document.createElement("h2")
+
+        header.innerText = data[0]
+        holder.append(header)
+
+        if (data[0] === "Transform"){
+            holder.style.height = "15em"
+
+            if (data[1].length === 0){
+                data[1].push([0, 0, 0])
+                data[1].push([0, 0, 0])
+                data[1].push([1, 1, 1])
+            }
+
+            const positionHeader = document.createElement("p")
+            positionHeader.innerText = "Position"
+            positionHeader.style.marginTop = "2.25rem"
+            holder.append(positionHeader)
+
+            const positionHolder = document.createElement("div")
+            positionHolder.style.height = "2em"
+            positionHolder.style.backgroundColor = "var(--main-background-color)"
+            positionHolder.style.marginTop = "0.5rem"
+            positionHolder.style.display = "flex"
+            positionHolder.style.flexDirection = "row"
+            holder.append(positionHolder)
+
+            for (let i = 0; i < 3; i++){
+                const pos = document.createElement("input")
+                pos.value = data[1][0][i]
+                pos.style.width = "33%"
+                positionHolder.append(pos)
+
+                pos.addEventListener("input", () => {
+                    let userInput = pos.value
+                    let numberValue = parseFloat(userInput)
+
+                    if (numberValue){
+                        data[1][0][i] = numberValue
+                    }
+                })
+            }
+
+            const rotationHeader = document.createElement("p")
+            rotationHeader.innerText = "Rotation"
+            rotationHeader.style.marginTop = "0.5rem"
+            holder.append(rotationHeader)
+
+            const rotationHolder = document.createElement("div")
+            rotationHolder.style.height = "2em"
+            rotationHolder.style.backgroundColor = "var(--main-background-color)"
+            rotationHolder.style.marginTop = "0.5rem"
+            rotationHolder.style.display = "flex"
+            rotationHolder.style.flexDirection = "row"
+            holder.append(rotationHolder)
+            
+            for (let i = 0; i < 3; i++){
+                const rot = document.createElement("input")
+                rot.value = data[1][1][i]
+                rot.style.width = "33%"
+                rotationHolder.append(rot)
+
+                rot.addEventListener("input", () => {
+                    let userInput = rot.value
+                    let numberValue = parseFloat(userInput)
+
+                    if (numberValue){
+                        data[1][1][i] = numberValue
+                    }
+                })
+            }
+
+            const scaleHeader = document.createElement("p")
+            scaleHeader.innerText = "Scale"
+            scaleHeader.style.marginTop = "0.5rem"
+            holder.append(scaleHeader)
+
+            const scaleHolder = document.createElement("div")
+            scaleHolder.style.height = "2em"
+            scaleHolder.style.backgroundColor = "var(--main-background-color)"
+            scaleHolder.style.marginTop = "0.5rem"
+            scaleHolder.style.display = "flex"
+            scaleHolder.style.flexDirection = "row"
+            holder.append(scaleHolder)
+
+            for (let i = 0; i < 3; i++){
+                const scale = document.createElement("input")
+                scale.value = data[1][2][i]
+                scale.style.width = "33%"
+                scaleHolder.append(scale)
+
+                scale.addEventListener("input", () => {
+                    let userInput = scale.value
+                    let numberValue = parseFloat(userInput)
+
+                    if (numberValue){
+                        data[1][2][i] = numberValue
+                    }
+                })
+            }
+        }
+
+        return holder
+    }
+
     renderSelectedObjectData(selectedObject){
         this.clearObjectData()
 
@@ -148,6 +276,13 @@ export class ObjectData{
 
         let mainData = this.createMainData(object, selectedObject)
         this.objectDataRenderDiv.append(mainData)
+
+        for (let i = 0; i < object.data.length; i++){
+            const data = object.data[i]
+
+            let dataHTML = this.createSpecData(object, selectedObject, data)
+            this.objectDataRenderDiv.append(dataHTML)
+        }
 
         let newDataButton = this.createNewDataButton()
         this.objectDataRenderDiv.append(newDataButton)
