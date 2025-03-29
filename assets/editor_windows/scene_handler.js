@@ -83,6 +83,10 @@ export class SceneHandler{
 
             htmlElement.style.transform = otherTranform
             htmlElement.style.opacity = `${1 - image[2]}`
+            htmlElement.style.imageRendering = image[3]
+        }
+        else{
+            this.removeObjectRender(object.id)
         }
     }
 }

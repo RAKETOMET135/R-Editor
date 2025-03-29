@@ -47,6 +47,24 @@ export class Object{
 
         this.data.push(data)
     }
+
+    removeData(data){
+        let dataIndex = -1
+
+        for (let i = 0; i < this.data.length; i++){
+            const curData = this.data[i]
+
+            if (curData[0] !== data[0]) continue
+
+            dataIndex = i
+
+            break
+        }
+
+        if (dataIndex === -1) return
+
+        this.data.splice(dataIndex, 1)
+    }
 }
 
 export function cloneObject(object, newObjectId){

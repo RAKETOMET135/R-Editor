@@ -213,6 +213,13 @@ body {
     font-weight: bold;
     transition: background-color 0.3s;
 }
+#object-data select {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background-color: rgb(75, 75, 75);
+    color: var(--main-text-color);
+}
 #object-data button:hover {
     background-color: var(--sec-background-color);
 }

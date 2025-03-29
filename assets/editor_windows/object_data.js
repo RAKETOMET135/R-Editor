@@ -174,12 +174,44 @@ export class ObjectData{
         this.sceneHandler.updateObjectRender(object)
     }
 
+    removeObjectData(object, selectedObject, data){
+        object.removeData(data)
+        this.updateRender(object)
+        this.renderSelectedObjectData(selectedObject)
+    }
+
     createSpecData(object, selectedObject, data){
         const holder = document.createElement("div")
         const header = document.createElement("h2")
+        const removeButton = document.createElement("button")
+        const resetButton = document.createElement("button")
 
         header.innerText = data[0]
         holder.append(header)
+        holder.append(removeButton)
+        holder.append(resetButton)
+
+        removeButton.style.width = "1.9rem"
+        removeButton.style.height = "1.9rem"
+        removeButton.style.right = "0"
+        removeButton.style.position = "absolute"
+        removeButton.innerText = "X"
+
+        removeButton.addEventListener("click", () => {
+            this.removeObjectData(object, selectedObject, data)
+        })
+
+        resetButton.style.width = "1.9rem"
+        resetButton.style.height = "1.9rem"
+        resetButton.style.right = "1.9rem"
+        resetButton.style.position = "absolute"
+        resetButton.innerText = "↻"
+
+        resetButton.addEventListener("click", () => {
+            data[1] = []
+            this.renderSelectedObjectData(selectedObject)
+            this.updateRender(object)
+        })
 
         if (data[0] === "Transform"){
             holder.style.height = "20em"
@@ -318,6 +350,7 @@ export class ObjectData{
                 data[1].push([0, 0])
                 data[1].push("")
                 data[1].push(0)
+                data[1].push("auto")
             }
 
             const sizeHeader = document.createElement("p")
@@ -402,6 +435,44 @@ export class ObjectData{
                     this.updateRender(object)
                 }
             })
+
+            const renderingHeader = document.createElement("p")
+            renderingHeader.innerText = "Rendering"
+            renderingHeader.style.marginTop = "0.5rem"
+            holder.append(renderingHeader)
+
+            const renderingHolder = document.createElement("div")
+            renderingHolder.style.height = "2em"
+            renderingHolder.style.backgroundColor = "var(--main-background-color)"
+            renderingHolder.style.marginTop = "0.5rem"
+            renderingHolder.style.display = "flex"
+            renderingHolder.style.flexDirection = "row"
+            holder.append(renderingHolder)
+
+            const rendering = document.createElement("select")
+            rendering.style.width = "100%"
+            renderingHolder.append(rendering)
+            const optionsText = ["auto", "crisp-edges", "optimizeQuality", "optimizeSpeed", "pixelated"]
+
+            for (let i = 0; i < optionsText.length; i++){
+                const option = document.createElement("option")
+                option.value = optionsText[i]
+                option.innerText = optionsText[i]
+                option.style.textAlign = "center"
+                rendering.append(option)
+
+                if (optionsText[i] === data[1][3]){
+                    option.selected = true
+                }
+            }
+
+            rendering.addEventListener("change", (event) => {
+                let userInput = event.target.value
+
+                data[1][3] = userInput
+                this.updateRender(object)
+            })
+            
         }
 
         return holder
