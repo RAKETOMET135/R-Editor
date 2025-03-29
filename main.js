@@ -2,6 +2,7 @@ import { Explorer, ExplorerElement } from "./assets/editor_windows/explorer.js"
 import { ObjectData } from "./assets/editor_windows/object_data.js"
 import { Object } from "./assets/objects/object.js"
 import { ProjectData } from "./assets/project_data/project_data.js"
+import { SceneHandler } from "./assets/editor_windows/scene_handler.js"
 
 function getProject(){
     const project = new ProjectData("Test project")
@@ -12,10 +13,14 @@ function getProject(){
 function main(){
     const project = getProject()
 
+    const sceneElement = document.querySelector("#scene")
+    const sceneHandler = new SceneHandler(sceneElement)
+
     const explorerRenderDiv = document.querySelector("#explorer")
-    const explorer = new Explorer(explorerRenderDiv, project)
+    const explorer = new Explorer(explorerRenderDiv, project, sceneHandler)
     const objectDataRenderDiv = document.querySelector("#object-data")
-    const objectData = new ObjectData(explorer, objectDataRenderDiv, project)
+    const objectData = new ObjectData(explorer, objectDataRenderDiv, project, sceneHandler)
+    
 
     explorer.objectData = objectData
 
@@ -27,13 +32,10 @@ function main(){
 
         explorer.addElement(explorerObject)
         project.objects.push(newObject)
+
+        sceneHandler.updateObjectRender(newObject)
     })
     
-
-    let playerObject = new Object("Player", 0)
-    let player = new ExplorerElement(playerObject.name, playerObject.id, "assets/images/web/container.png", NaN, "Scene 1", playerObject)
-    explorer.addElement(player)
-    project.objects.push(playerObject)
 
     
 }

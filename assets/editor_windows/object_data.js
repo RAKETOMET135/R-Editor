@@ -3,14 +3,21 @@ import { StringConverter } from "../utils/string_converter.js"
 import { getAllData } from "../editor_data/object_data_list.js"
 
 export class ObjectData{
-    constructor(explorer, objectDataRenderDiv, project){
+    constructor(explorer, objectDataRenderDiv, project, sceneHandler){
         this.explorer = explorer
         this.objectDataRenderDiv = objectDataRenderDiv
         this.project = project
+        this.sceneHandler = sceneHandler
 
         const objectDataSearch = document.querySelector("#object-data-search")
         objectDataSearch.addEventListener("input", () => {
             this.appendNewDataMenu(objectDataSearch.value)
+        })
+
+        const objectDataAddClose = document.querySelector("#object-data-add-close")
+        objectDataAddClose.addEventListener("click", () => {
+            const menu = document.querySelector("#object-data-new-data")
+            menu.style.display = "none"
         })
     }
 
@@ -126,6 +133,8 @@ export class ObjectData{
                 selectedObject.object.addData(dataConstruct)
 
                 this.renderSelectedObjectData(selectedObject)
+
+                this.sceneHandler.updateObjectRender(selectedObject.object)
             })
         }
     }
@@ -149,13 +158,20 @@ export class ObjectData{
 
             menu.style.width = `${width}px`
             menu.style.height = `${width}px`
-            menu.style.left = `${rect.left}px`
-            menu.style.top = `${rect.top}px`
+            //menu.style.left = `${rect.left}px`
+            //menu.style.top = `${rect.top}px`
+            menu.style.left = "50%"
+            menu.style.top = "50%"
+            menu.style.translate = "-50% -50%"
 
             this.appendNewDataMenu("")
         })
 
         return newDataButton
+    }
+
+    updateRender(object){
+        this.sceneHandler.updateObjectRender(object)
     }
 
     createSpecData(object, selectedObject, data){
@@ -166,12 +182,13 @@ export class ObjectData{
         holder.append(header)
 
         if (data[0] === "Transform"){
-            holder.style.height = "15em"
+            holder.style.height = "20em"
 
             if (data[1].length === 0){
                 data[1].push([0, 0, 0])
                 data[1].push([0, 0, 0])
                 data[1].push([1, 1, 1])
+                data[1].push([0, 0, 0])
             }
 
             const positionHeader = document.createElement("p")
@@ -197,8 +214,9 @@ export class ObjectData{
                     let userInput = pos.value
                     let numberValue = parseFloat(userInput)
 
-                    if (numberValue){
+                    if (numberValue || numberValue === 0){
                         data[1][0][i] = numberValue
+                        this.updateRender(object)
                     }
                 })
             }
@@ -226,8 +244,9 @@ export class ObjectData{
                     let userInput = rot.value
                     let numberValue = parseFloat(userInput)
 
-                    if (numberValue){
+                    if (numberValue || numberValue === 0){
                         data[1][1][i] = numberValue
+                        this.updateRender(object)
                     }
                 })
             }
@@ -255,11 +274,134 @@ export class ObjectData{
                     let userInput = scale.value
                     let numberValue = parseFloat(userInput)
 
-                    if (numberValue){
+                    if (numberValue || numberValue === 0){
                         data[1][2][i] = numberValue
+                        this.updateRender(object)
                     }
                 })
             }
+
+            const translateHeader = document.createElement("p")
+            translateHeader.innerText = "Translation"
+            translateHeader.style.marginTop = "0.5rem"
+            holder.append(translateHeader)
+
+            const translateHolder = document.createElement("div")
+            translateHolder.style.height = "2em"
+            translateHolder.style.backgroundColor = "var(--main-background-color)"
+            translateHolder.style.marginTop = "0.5rem"
+            translateHolder.style.display = "flex"
+            translateHolder.style.flexDirection = "row"
+            holder.append(translateHolder)
+
+            for (let i = 0; i < 3; i++){
+                const translate = document.createElement("input")
+                translate.value = data[1][3][i]
+                translate.style.width = "33%"
+                translateHolder.append(translate)
+
+                translate.addEventListener("input", () => {
+                    let userInput = translate.value
+                    let numberValue = parseFloat(userInput)
+
+                    if (numberValue || numberValue === 0){
+                        data[1][3][i] = numberValue
+                        this.updateRender(object)
+                    }
+                })
+            }
+        }
+        else if (data[0] === "Image"){
+            holder.style.height = "20em"
+
+            if (data[1].length === 0){
+                data[1].push([0, 0])
+                data[1].push("")
+                data[1].push(0)
+            }
+
+            const sizeHeader = document.createElement("p")
+            sizeHeader.innerText = "Size"
+            sizeHeader.style.marginTop = "2.25rem"
+            holder.append(sizeHeader)
+
+            const sizeHolder = document.createElement("div")
+            sizeHolder.style.height = "2em"
+            sizeHolder.style.backgroundColor = "var(--main-background-color)"
+            sizeHolder.style.marginTop = "0.5rem"
+            sizeHolder.style.display = "flex"
+            sizeHolder.style.flexDirection = "row"
+            holder.append(sizeHolder)
+
+            for (let i = 0; i < 2; i++){
+                const size = document.createElement("input")
+                size.value = data[1][0][i]
+                size.style.width = "50%"
+                sizeHolder.append(size)
+
+                size.addEventListener("input", () => {
+                    let userInput = size.value
+                    let numberValue = parseFloat(userInput)
+
+                    if (numberValue || numberValue === 0){
+                        data[1][0][i] = numberValue
+                        this.updateRender(object)
+                    }
+                })
+            }
+
+            const imgHeader = document.createElement("p")
+            imgHeader.innerText = "URL"
+            imgHeader.style.marginTop = "0.5rem"
+            holder.append(imgHeader)
+
+            const imgHolder = document.createElement("div")
+            imgHolder.style.height = "2em"
+            imgHolder.style.backgroundColor = "var(--main-background-color)"
+            imgHolder.style.marginTop = "0.5rem"
+            imgHolder.style.display = "flex"
+            imgHolder.style.flexDirection = "row"
+            holder.append(imgHolder)
+
+            const img = document.createElement("input")
+            img.value = data[1][1]
+            img.style.width = "100%"
+            imgHolder.append(img)
+
+            img.addEventListener("input", () => {
+                let userInput = img.value
+
+                data[1][1] = userInput
+                this.updateRender(object)
+            })
+
+            const transparencyHeader = document.createElement("p")
+            transparencyHeader.innerText = "Transparency"
+            transparencyHeader.style.marginTop = "0.5rem"
+            holder.append(transparencyHeader)
+
+            const transparencyHolder = document.createElement("div")
+            transparencyHolder.style.height = "2em"
+            transparencyHolder.style.backgroundColor = "var(--main-background-color)"
+            transparencyHolder.style.marginTop = "0.5rem"
+            transparencyHolder.style.display = "flex"
+            transparencyHolder.style.flexDirection = "row"
+            holder.append(transparencyHolder)
+
+            const transparency = document.createElement("input")
+            transparency.value = data[1][2]
+            transparency.style.width = "100%"
+            transparencyHolder.append(transparency)
+
+            transparency.addEventListener("input", () => {
+                let userInput = transparency.value
+                let numberValue = parseFloat(userInput)
+
+                if (numberValue || numberValue === 0){
+                    data[1][2] = userInput
+                    this.updateRender(object)
+                }
+            })
         }
 
         return holder

@@ -1,5 +1,6 @@
 let data = [
-    "Transform"
+    "Transform",
+    "Image"
 ]
 
 export function getAllData(){

@@ -1,4 +1,4 @@
-import { Object } from "../objects/object.js"
+import { Object, cloneObject } from "../objects/object.js"
 
 export class ExplorerElement{
     constructor(elementName, elementId, elementType, elementParent, scene, object){
@@ -14,7 +14,7 @@ export class ExplorerElement{
 }
 
 export class Explorer{
-    constructor(renderDiv, project){
+    constructor(renderDiv, project, sceneHandler){
         this.content = []
         this.renderDiv = renderDiv
         this.selectedElement = NaN
@@ -23,6 +23,7 @@ export class Explorer{
         this.contextMenuSelected = NaN
         this.contextMenuSelectedHtml = NaN
         this.project = project
+        this.sceneHandler = sceneHandler
 
         document.body.addEventListener("click", () => {
             const contextMenu = document.querySelector("#explorer-contextmenu")
@@ -45,6 +46,8 @@ export class Explorer{
         deleteButton.addEventListener("click", () => {
             if (!this.contextMenuSelected || !this.contextMenuSelectedHtml) return
 
+            sceneHandler.removeObjectRender(this.contextMenuSelected.object.id)
+
             project.removeObject(this.contextMenuSelected.object.id)
             this.removeElement(this.contextMenuSelected.id)
         })
@@ -62,10 +65,10 @@ export class Explorer{
 
             let newObjectId = this.project.generateObjectId()
             let originalObject = this.contextMenuSelected.object
-            let newObject = originalObject.cloneObject()
-            newObject.name = this.contextMenuSelected.name + "_clone"
-            newObject.id = newObjectId
+            let newObject = cloneObject(originalObject, newObjectId)
             let explorerObject = new ExplorerElement(newObject.name, newObjectId, this.contextMenuSelected.elementType, this.contextMenuSelected.parent, this.contextMenuSelected.scene, newObject)
+
+            sceneHandler.updateObjectRender(newObject)
 
             this.addElement(explorerObject)
             this.project.objects.push(newObject)
