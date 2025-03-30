@@ -474,6 +474,41 @@ export class ObjectData{
             })
             
         }
+        else if (data[0] === "Gravity"){
+            holder.style.height = "7.5em"
+
+            if (data[1].length === 0){
+                data[1].push(9.8)
+            }
+
+            const gravityHeader = document.createElement("p")
+            gravityHeader.innerText = "Force"
+            gravityHeader.style.marginTop = "2.25rem"
+            holder.append(gravityHeader)
+
+            const gravityHolder = document.createElement("div")
+            gravityHolder.style.height = "2em"
+            gravityHolder.style.backgroundColor = "var(--main-background-color)"
+            gravityHolder.style.marginTop = "0.5rem"
+            gravityHolder.style.display = "flex"
+            gravityHolder.style.flexDirection = "row"
+            holder.append(gravityHolder)
+
+            const gravity = document.createElement("input")
+            gravity.value = data[1][0]
+            gravity.style.width = "100%"
+            gravityHolder.append(gravity)
+
+            gravity.addEventListener("input", () => {
+                let userInput = gravity.value
+                let numberValue = parseFloat(userInput)
+
+                if (numberValue || numberValue === 0){
+                    data[1][0] = numberValue
+                    this.updateRender(object)
+                }
+            })
+        }
 
         return holder
     }
